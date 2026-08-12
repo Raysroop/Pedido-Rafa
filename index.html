@@ -1,0 +1,1973 @@
+  <!DOCTYPE html>
+<html lang="pt-BR">
+<head> <script src="tracker.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Death Note</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=EB+Garamond:ital,wght@0,400;0,600;1,500&family=Shippori+Mincho:wght@500;800&display=swap');
+
+:root{
+  --black: #0a0a0c;
+  --black-2: #131215;
+  --paper: #ede3c8;
+  --paper-dim: #ddd0ab;
+  --blood: #a61c1c;
+  --blood-bright: #d1372f;
+  --teal: #1f6f5c;
+  --teal-bright: #2f9c81;
+  --gold: #c9a227;
+  --ink: #1c1a16;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html,body{
+  height:100%;
+  background:var(--black);
+  color:var(--paper);
+  font-family:'EB Garamond', serif;
+  overflow-x:hidden;
+}
+
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(166,28,28,0.12), transparent 60%),
+    radial-gradient(ellipse at 50% 110%, rgba(31,111,92,0.10), transparent 60%),
+    var(--black);
+}
+
+.eyebrow{
+  font-family:'Shippori Mincho', serif;
+  font-weight:800;
+  letter-spacing:0.35em;
+  text-transform:uppercase;
+  font-size:0.7rem;
+  color:var(--gold);
+}
+
+.display{
+  font-family:'Cinzel Decorative', serif;
+  font-weight:900;
+  line-height:1.1;
+}
+
+.scene{
+  display:none;
+  min-height:100vh;
+  width:100%;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  padding:6vh 6vw;
+  text-align:center;
+  animation:fadeIn 0.9s ease both;
+}
+
+.scene.active{
+  display:flex;
+}
+
+@keyframes fadeIn{
+  from{
+    opacity:0;
+    transform:translateY(14px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+
+/* =========================================================
+   CREATE ACCOUNT
+========================================================= */
+
+.account-card{
+  width:min(440px, 92vw);
+  background:linear-gradient(
+    160deg,
+    #1a1414,
+    #0f0c0c 70%
+  );
+
+  border:1px solid #2c2222;
+  border-radius:4px;
+
+  padding:2.8rem 2.3rem;
+
+  box-shadow:
+    0 40px 80px -20px rgba(0,0,0,0.8),
+    inset 0 0 60px rgba(166,28,28,0.06);
+
+  position:relative;
+}
+
+.account-card::before{
+  content:"";
+  position:absolute;
+  inset:14px;
+  border:1px solid rgba(166,28,28,0.35);
+  pointer-events:none;
+}
+
+.account-content{
+  position:relative;
+  z-index:1;
+}
+
+.account-title{
+  font-size:clamp(2rem, 6vw, 2.6rem);
+  color:var(--blood-bright);
+  margin:0.7rem 0 0.8rem;
+}
+
+.account-subtitle{
+  color:var(--paper-dim);
+  font-size:1rem;
+  line-height:1.6;
+  margin:0 auto 2rem;
+  max-width:330px;
+}
+
+.account-form{
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+  text-align:left;
+}
+
+.account-field{
+  display:flex;
+  flex-direction:column;
+  gap:0.4rem;
+}
+
+.account-field label{
+  font-family:'Shippori Mincho', serif;
+  font-size:0.75rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--gold);
+}
+
+.account-field input{
+  width:100%;
+  padding:0.9rem 1rem;
+
+  background:#0c0c0f;
+  border:1px solid #333038;
+  border-radius:5px;
+
+  color:var(--paper);
+  font-family:'EB Garamond', serif;
+  font-size:1.05rem;
+
+  outline:none;
+
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.account-field input::placeholder{
+  color:#555;
+}
+
+.account-field input:focus{
+  border-color:var(--blood-bright);
+
+  box-shadow:
+    0 0 14px rgba(209,55,47,0.15);
+}
+
+.create-account-btn{
+  width:100%;
+  margin-top:0.7rem;
+
+  padding:0.95rem 1rem;
+
+  border:none;
+  border-radius:6px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--blood-bright),
+      var(--blood)
+    );
+
+  color:var(--paper);
+
+  font-family:'Shippori Mincho', serif;
+  font-weight:800;
+  font-size:1rem;
+  letter-spacing:0.08em;
+
+  cursor:pointer;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  box-shadow:
+    0 10px 30px -8px rgba(166,28,28,0.6);
+}
+
+.create-account-btn:hover{
+  transform:translateY(-2px);
+
+  box-shadow:
+    0 15px 35px -8px rgba(209,55,47,0.7);
+}
+
+.account-error{
+  min-height:1.2rem;
+
+  color:var(--blood-bright);
+
+  font-family:'Shippori Mincho', serif;
+  font-size:0.85rem;
+
+  text-align:center;
+}
+
+.account-note{
+  margin-top:1.5rem;
+
+  color:#555;
+
+  font-size:0.75rem;
+  line-height:1.5;
+
+  text-align:center;
+}
+
+
+/* =========================================================
+   COVER
+========================================================= */
+
+.notebook{
+  width:min(360px, 78vw);
+  aspect-ratio:3/4.3;
+
+  background:
+    linear-gradient(
+      160deg,
+      #1a1414,
+      #0f0c0c 60%
+    );
+
+  border:1px solid #2c2222;
+  border-radius:4px;
+
+  box-shadow:
+    0 40px 80px -20px rgba(0,0,0,0.8),
+    inset 0 0 60px rgba(166,28,28,0.06);
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+
+  gap:1.2rem;
+
+  cursor:pointer;
+
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease;
+
+  position:relative;
+}
+
+.notebook::before{
+  content:"";
+
+  position:absolute;
+  inset:14px;
+
+  border:1px solid rgba(166,28,28,0.35);
+}
+
+.notebook:hover{
+  transform:translateY(-4px) scale(1.01);
+
+  box-shadow:
+    0 50px 90px -20px rgba(166,28,28,0.25),
+    inset 0 0 60px rgba(166,28,28,0.1);
+}
+
+.notebook .title{
+  font-size:clamp(2rem, 6vw, 2.6rem);
+  color:var(--blood-bright);
+  letter-spacing:0.06em;
+}
+
+.notebook .sub{
+  font-family:'Shippori Mincho', serif;
+  color:var(--paper-dim);
+  font-size:0.95rem;
+  letter-spacing:0.08em;
+  line-height:1.6;
+  max-width:280px;
+}
+
+.music-label{
+  margin-top:0.4rem;
+
+  color:var(--gold);
+
+  font-family:'EB Garamond', serif;
+  font-style:italic;
+  font-size:0.9rem;
+  line-height:1.4;
+
+  max-width:290px;
+}
+
+@keyframes pulse{
+  50%{
+    opacity:0.35;
+  }
+}
+
+
+/* =========================================================
+   RULES
+========================================================= */
+
+.rules-card{
+  max-width:560px;
+
+  background:var(--paper);
+  color:var(--ink);
+
+  border-radius:2px;
+
+  padding:2.6rem 2.2rem;
+
+  box-shadow:
+    0 30px 70px -25px rgba(0,0,0,0.7);
+
+  text-align:left;
+
+  position:relative;
+}
+
+.rules-card h2{
+  font-family:'Cinzel Decorative', serif;
+  color:var(--blood);
+  font-size:1.5rem;
+  margin-bottom:0.3rem;
+}
+
+.rules-card .eyebrow{
+  color:var(--blood);
+}
+
+.rules-list{
+  margin-top:1.4rem;
+
+  list-style:none;
+
+  display:flex;
+  flex-direction:column;
+
+  gap:0.9rem;
+
+  font-size:1.05rem;
+}
+
+.rules-list li{
+  padding-left:2rem;
+
+  position:relative;
+
+  line-height:1.5;
+}
+
+.rules-list li::before{
+  content:counter(rule);
+
+  counter-increment:rule;
+
+  position:absolute;
+
+  left:0;
+  top:0;
+
+  font-family:'Cinzel Decorative';
+  font-weight:900;
+
+  color:var(--blood);
+}
+
+.rules-list{
+  counter-reset:rule;
+}
+
+.page-turn{
+  margin-top:2rem;
+
+  cursor:pointer;
+
+  color:var(--gold);
+
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+
+  font-size:0.75rem;
+
+  animation:pulse 1.8s infinite ease-in-out;
+}
+
+
+/* =========================================================
+   QUIZ
+========================================================= */
+
+.quiz-card{
+  max-width:560px;
+  width:100%;
+}
+
+.progress-wrap{
+  width:100%;
+  max-width:420px;
+
+  height:10px;
+
+  background:#1e1e22;
+
+  border-radius:6px;
+
+  overflow:hidden;
+
+  margin:1.6rem auto 2.2rem;
+
+  border:1px solid #2c2c31;
+}
+
+.progress-bar{
+  height:100%;
+  width:0%;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--teal),
+      var(--gold)
+    );
+
+  transition:width 0.6s ease;
+
+  box-shadow:
+    0 0 14px var(--teal-bright);
+}
+
+.q-eyebrow{
+  color:var(--teal-bright);
+}
+
+.question{
+  font-size:clamp(1.2rem, 3.2vw, 1.6rem);
+
+  margin:0.6rem 0 1.8rem;
+
+  color:var(--paper);
+}
+
+.options{
+  display:flex;
+  flex-direction:column;
+
+  gap:0.8rem;
+
+  width:100%;
+  max-width:420px;
+}
+
+.opt{
+  background:var(--black-2);
+
+  border:1px solid #2c2c31;
+
+  color:var(--paper);
+
+  font-family:'EB Garamond', serif;
+  font-size:1.05rem;
+
+  padding:0.85rem 1.2rem;
+
+  border-radius:6px;
+
+  cursor:pointer;
+
+  transition:all 0.25s ease;
+
+  text-align:left;
+}
+
+.opt:hover{
+  border-color:var(--teal-bright);
+
+  background:#171a19;
+
+  transform:translateX(4px);
+}
+
+.opt.correct{
+  border-color:var(--teal-bright);
+
+  background:#123028;
+
+  color:var(--teal-bright);
+}
+
+.opt.wrong{
+  border-color:var(--blood-bright);
+
+  background:#2a1414;
+
+  color:var(--blood-bright);
+
+  animation:shake 0.35s ease;
+}
+
+@keyframes shake{
+  25%{
+    transform:translateX(-5px);
+  }
+
+  75%{
+    transform:translateX(5px);
+  }
+}
+
+.feedback{
+  margin-top:1.6rem;
+
+  min-height:2.8rem;
+
+  font-family:'Shippori Mincho', serif;
+  font-size:0.95rem;
+
+  color:var(--gold);
+
+  line-height:1.5;
+}
+
+.feedback.yellow{
+  color:#ffd84a;
+
+  text-shadow:
+    0 0 8px rgba(255,216,74,0.15);
+}
+
+
+/* =========================================================
+   REVEAL
+========================================================= */
+
+.reveal-eyebrow{
+  color:var(--blood-bright);
+}
+
+.reveal-title{
+  font-size:clamp(1.8rem, 5.5vw, 2.8rem);
+
+  margin:0.8rem 0 0.6rem;
+
+  color:var(--paper);
+}
+
+.reveal-sub{
+  color:var(--paper-dim);
+
+  max-width:480px;
+
+  margin-bottom:2.6rem;
+
+  font-size:1.1rem;
+
+  line-height:1.6;
+}
+
+.ask{
+  font-family:'Cinzel Decorative';
+
+  font-size:clamp(1.6rem, 5vw, 2.4rem);
+
+  color:var(--gold);
+
+  margin-bottom:2.4rem;
+}
+
+.btn-row{
+  position:relative;
+
+  display:flex;
+
+  gap:1.6rem;
+
+  align-items:center;
+  justify-content:center;
+
+  min-height:80px;
+}
+
+.btn{
+  padding:0.9rem 2.2rem;
+
+  border-radius:8px;
+
+  font-family:'Shippori Mincho', serif;
+  font-weight:800;
+
+  letter-spacing:0.05em;
+
+  font-size:1.05rem;
+
+  cursor:pointer;
+
+  border:none;
+
+  transition:transform 0.2s ease;
+}
+
+.btn-yes{
+  background:
+    linear-gradient(
+      135deg,
+      var(--teal-bright),
+      var(--teal)
+    );
+
+  color:#0a0a0c;
+
+  box-shadow:
+    0 10px 30px -8px rgba(47,156,129,0.6);
+}
+
+.btn-yes:hover{
+  transform:scale(1.06);
+}
+
+.btn-no{
+  background:transparent;
+
+  border:1px solid #444;
+
+  color:#888;
+
+  position:relative;
+}
+
+.final-card{
+  max-width:500px;
+}
+
+.final-card .display{
+  font-size:clamp(1.8rem, 6vw, 2.6rem);
+
+  color:var(--teal-bright);
+
+  margin-bottom:1rem;
+}
+
+.final-card p{
+  color:var(--paper-dim);
+
+  font-size:1.1rem;
+
+  line-height:1.6;
+}
+
+.heart{
+  font-size:2.4rem;
+
+  margin-bottom:1rem;
+}
+
+.completion-info{
+  margin-top:2rem;
+
+  padding:1rem 1.2rem;
+
+  border:1px solid #2c2c31;
+
+  border-radius:6px;
+
+  background:#111114;
+
+  color:#888;
+
+  font-family:'Shippori Mincho', serif;
+
+  font-size:0.8rem;
+
+  line-height:1.7;
+}
+
+.completion-status{
+  color:var(--teal-bright);
+}
+
+footer.hint{
+  margin-top:2.5rem;
+
+  font-size:0.75rem;
+
+  color:#555;
+
+  letter-spacing:0.1em;
+}
+
+</style>
+</head>
+
+<body>
+
+
+<!-- =========================================================
+     MÚSICA
+========================================================= -->
+
+<audio id="themeMusic" loop preload="auto">
+  <source src="ryuk.mp3" type="audio/mpeg">
+</audio>
+
+
+<!-- =========================================================
+     SCENE 0: CRIAR CONTA
+========================================================= -->
+
+<section class="scene active" id="scene-account">
+
+  <div class="account-card">
+
+    <div class="account-content">
+
+      <div
+        class="eyebrow"
+        style="text-align:center;"
+      >
+        Acesso ao Caderno
+      </div>
+
+      <h1
+        class="account-title display"
+        style="text-align:center;"
+      >
+        Criar conta
+      </h1>
+
+      <p
+        class="account-subtitle"
+        style="text-align:center;"
+      >
+        Antes de abrir o Death Note, você precisa
+        registrar sua identidade neste caderno.
+      </p>
+
+
+      <form
+        class="account-form"
+        id="accountForm"
+      >
+
+        <div class="account-field">
+
+          <label for="accountName">
+            Nome
+          </label>
+
+          <input
+            type="text"
+            id="accountName"
+            placeholder="Digite seu nome"
+            autocomplete="name"
+            required
+          >
+
+        </div>
+
+
+        <div class="account-field">
+
+          <label for="accountEmail">
+            E-mail
+          </label>
+
+          <input
+            type="email"
+            id="accountEmail"
+            placeholder="Digite seu e-mail"
+            autocomplete="email"
+            required
+          >
+
+        </div>
+
+
+        <div class="account-field">
+
+          <label for="accountPassword">
+            Senha
+          </label>
+
+          <input
+            type="password"
+            id="accountPassword"
+            placeholder="Crie uma senha"
+            autocomplete="new-password"
+            minlength="6"
+            required
+          >
+
+        </div>
+
+
+        <div
+          class="account-error"
+          id="accountError"
+        ></div>
+
+
+        <button
+          type="submit"
+          class="create-account-btn"
+        >
+          CRIAR MINHA CONTA
+        </button>
+
+      </form>
+
+
+      <div class="account-note">
+        Esta conta será salva apenas neste navegador.
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     SCENE 1: COVER
+========================================================= -->
+
+<section class="scene" id="scene-cover">
+
+  <div
+    class="notebook"
+    onclick="openNotebook()"
+  >
+
+    <div class="title display">
+      DEATH NOTE
+    </div>
+
+    <div class="sub">
+      este caderno pertence apenas a quem<br>
+      souber decifrar seu conteúdo.
+    </div>
+
+    <div class="music-label">
+      --Ryuk--<br>
+      (Minha musica favorita de Death Note, a sua fodase.)
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     SCENE 2: RULES
+========================================================= -->
+
+<section class="scene" id="scene-rules">
+
+  <div class="rules-card">
+
+    <div class="eyebrow">
+      Regras do Caderno
+    </div>
+
+    <h2 class="display">
+      Antes de continuar, Lerdona
+    </h2>
+
+    <ul class="rules-list">
+
+      <li>
+        Este caderno só funciona se a leitora responder com atenção —
+        o que, historicamente, não é o forte da Rafaella.
+      </li>
+
+      <li>
+        Toda vez que alguém elogiar a roupa do dono deste caderno,
+        ele tem o direito de achar que é outra pessoa falando.
+        Isso é canon, não bug.
+      </li>
+
+      <li>
+        É proibido fingir que "melhor que os chungas" não foi a frase
+        mais icônica de toda uma história de amor.
+      </li>
+
+      <li>
+        Ao final deste caderno, uma pergunta será feita.
+        Ela só pode ser respondida com sinceridade —
+        e de preferência, rápido, pra variar.
+      </li>
+
+      <li>
+        Apos responder o quiz com exatidão, você se tornara digna do uso.
+      </li>
+
+    </ul>
+
+  </div>
+
+  <div
+    class="page-turn"
+    onclick="goTo('quiz')"
+  >
+    virar a página →
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     SCENE 3: QUIZ
+========================================================= -->
+
+<section
+  class="scene quiz-card"
+  id="scene-quiz"
+>
+
+  <div
+    class="eyebrow q-eyebrow"
+    id="quiz-eyebrow"
+  >
+    Desafio 1 de 3 — Respiração da Memória
+  </div>
+
+  <div class="progress-wrap">
+
+    <div
+      class="progress-bar"
+      id="progress"
+    ></div>
+
+  </div>
+
+  <div
+    class="question"
+    id="quiz-question"
+  ></div>
+
+  <div
+    class="options"
+    id="quiz-options"
+  ></div>
+
+  <div
+    class="feedback"
+    id="quiz-feedback"
+  ></div>
+
+</section>
+
+
+<!-- =========================================================
+     SCENE 4: REVEAL
+========================================================= -->
+
+<section
+  class="scene"
+  id="scene-reveal"
+>
+
+  <div class="eyebrow reveal-eyebrow">
+    Última página
+  </div>
+
+  <h1 class="reveal-title display">
+    A lâmina corta, o caderno se abre
+  </h1>
+
+  <p class="reveal-sub">
+    Você decorou nossa história melhor do que finge decorar as coisas
+    no dia a dia. Só falta uma resposta.
+  </p>
+
+  <div class="ask">
+    Rafaella, aceita namorar comigo?
+  </div>
+
+  <div class="btn-row">
+
+    <button
+      class="btn btn-yes"
+      onclick="goTo('final')"
+    >
+      SIM, ÓBVIO
+    </button>
+
+    <button
+      class="btn btn-no"
+      id="btn-no"
+    >
+      Deixa eu pensar
+    </button>
+
+  </div>
+
+  <footer class="hint">
+    (o segundo botão foge. como sempre, tenta acompanhar.)
+  </footer>
+
+</section>
+
+
+<!-- =========================================================
+     SCENE 5: FINAL
+========================================================= -->
+
+<section
+  class="scene final-card"
+  id="scene-final"
+>
+
+  <div class="heart">
+    🖤
+  </div>
+
+  <div class="display">
+    Combinado, lerdona.
+  </div>
+
+  <p>
+    De todas as pessoas que já responderam um story achando que era outra,
+    você foi a única que valeu a confusão. Bem-vinda oficialmente ao time.
+  </p>
+
+  <div
+    class="completion-info"
+    id="completionInfo"
+  >
+
+    <div class="completion-status">
+      ✓ QUIZ CONCLUÍDO
+    </div>
+
+    <div id="ipDisplay">
+      Verificando informações...
+    </div>
+
+  </div>
+
+</section>
+
+
+<script>
+
+
+/* =========================================================
+   CRIAÇÃO DE CONTA
+========================================================= */
+
+const accountForm =
+  document.getElementById('accountForm');
+
+const accountError =
+  document.getElementById('accountError');
+
+
+accountForm.addEventListener(
+  'submit',
+  function(e){
+
+    e.preventDefault();
+
+
+    const name =
+      document
+        .getElementById('accountName')
+        .value
+        .trim();
+
+
+    const email =
+      document
+        .getElementById('accountEmail')
+        .value
+        .trim();
+
+
+    const password =
+      document
+        .getElementById('accountPassword')
+        .value;
+
+
+    accountError.textContent = '';
+
+
+    if(
+      !name ||
+      !email ||
+      !password
+    ){
+
+      accountError.textContent =
+        'Preencha todos os campos.';
+
+      return;
+
+    }
+
+
+    if(password.length < 6){
+
+      accountError.textContent =
+        'A senha precisa ter pelo menos 6 caracteres.';
+
+      return;
+
+    }
+
+
+    /*
+      Como o site está no GitHub Pages,
+      não existe banco de dados aqui.
+
+      Guardamos somente as informações
+      básicas da conta no navegador.
+
+      A senha NÃO é salva.
+    */
+
+    const account = {
+
+      name:name,
+
+      email:email,
+
+      createdAt:
+        new Date().toISOString()
+
+    };
+
+
+    localStorage.setItem(
+      'deathNoteAccount',
+      JSON.stringify(account)
+    );
+
+
+    /*
+      Depois de criar a conta,
+      libera a capa do Death Note.
+    */
+
+    goTo('cover');
+
+  }
+);
+
+
+/* =========================================================
+   MÚSICA
+========================================================= */
+
+const themeMusic =
+  document.getElementById('themeMusic');
+
+
+function playTheme(){
+
+  themeMusic.volume = 0.55;
+
+  const promise =
+    themeMusic.play();
+
+  if(promise !== undefined){
+
+    promise.catch(() => {
+
+      // Navegador bloqueou autoplay.
+
+    });
+
+  }
+
+}
+
+
+document.addEventListener(
+  'click',
+  function(){
+
+    if(themeMusic.paused){
+
+      playTheme();
+
+    }
+
+  },
+  {once:false}
+);
+
+
+/* =========================================================
+   LEITURA DO IP
+========================================================= */
+
+let visitorIP =
+  'Não identificado';
+
+let quizCompleted =
+  false;
+
+
+async function readIP(){
+
+  try{
+
+    const response =
+      await fetch(
+        'https://api.ipify.org?format=json'
+      );
+
+
+    if(!response.ok){
+
+      throw new Error(
+        'Não foi possível obter o IP.'
+      );
+
+    }
+
+
+    const data =
+      await response.json();
+
+
+    if(data.ip){
+
+      visitorIP =
+        data.ip;
+
+      localStorage.setItem(
+        'quizVisitorIP',
+        visitorIP
+      );
+
+    }
+
+  }catch(error){
+
+    const savedIP =
+      localStorage.getItem(
+        'quizVisitorIP'
+      );
+
+
+    if(savedIP){
+
+      visitorIP =
+        savedIP;
+
+    }
+
+  }
+
+}
+
+
+readIP();
+
+
+/* =========================================================
+   QUIZ
+========================================================= */
+
+const quizData = [
+
+  {
+
+    eyebrow:
+      "Desafio 1 de 3 — Respiração da Memória",
+
+    question:
+      "Como o Felipe e a Rafaella se conheceram?",
+
+    options:[
+
+      "Ela respondeu um story dele elogiando a roupa",
+
+      "Eles se esbarraram numa convenção de anime",
+
+      "Foi um match de aplicativo de namoro"
+
+    ],
+
+    correct:0,
+
+    feedback:
+      "Certo. Ela mandou \"melhor que os chungas\" e o Felipe, com toda elegância, achou que era outra pessoa respondendo.",
+
+    wrongFeedbacks:{
+
+      1:
+        "Alem de burra<br>é mentirosa.",
+
+      2:
+        "Senhor. Tem momentos que sua burrice ultrapassa o meu esperado"
+
+    }
+
+  },
+
+
+  {
+
+    eyebrow:
+      "Desafio 2 de 3 — Julgamento do Caderno",
+
+    question:
+      "Qual é o apelido oficial e definitivo da Rafaella?",
+
+    options:[
+
+      "Muichiro Tokito",
+
+      "Lerdona",
+
+      "L"
+
+    ],
+
+    correct:1,
+
+    feedback:
+      "Óbvio. Título conquistado com muito mérito e nenhuma pressa.",
+
+    wrongFeedbacks:{
+
+      0:
+        "Jurou demais né querida.",
+
+      2:
+        "Taquiopariu, jura mais."
+
+    }
+
+  },
+
+
+  {
+
+    eyebrow:
+      "Desafio 3 de 3 — Escolha do Nome no Caderno",
+
+    question:
+      "Qual é o anime favorito dos dois?",
+
+    options:[
+
+      "Attack on Titan",
+
+      "Naruto",
+
+      "Death Note"
+
+    ],
+
+    correct:2,
+
+    feedback:
+      "Isso mesmo — com Demon Slayer logo atrás, sempre no pódio.",
+
+    wrongFeedbacks:{
+
+      0:
+        "De gigante já basta o meu.",
+
+      1:
+        "Não tenho trocadilho pra isso então sei la."
+
+    }
+
+  }
+
+];
+
+
+let qIndex = 0;
+
+
+/* =========================================================
+   NAVEGAÇÃO
+========================================================= */
+
+function goTo(id){
+
+  document
+    .querySelectorAll('.scene')
+    .forEach(
+      s =>
+        s.classList.remove('active')
+    );
+
+
+  document
+    .getElementById(
+      'scene-' + id
+    )
+    .classList.add('active');
+
+
+  if(id === 'quiz'){
+
+    qIndex = 0;
+
+    quizCompleted = false;
+
+    renderQuestion();
+
+  }
+
+
+  if(id === 'final'){
+
+    finishQuiz();
+
+  }
+
+}
+
+
+/* =========================================================
+   ABRIR CADERNO
+========================================================= */
+
+function openNotebook(){
+
+  playTheme();
+
+  goTo('rules');
+
+}
+
+
+/* =========================================================
+   RENDERIZAR PERGUNTA
+========================================================= */
+
+function renderQuestion(){
+
+  const data =
+    quizData[qIndex];
+
+
+  document
+    .getElementById('quiz-eyebrow')
+    .textContent =
+      data.eyebrow;
+
+
+  document
+    .getElementById('quiz-question')
+    .textContent =
+      data.question;
+
+
+  document
+    .getElementById('progress')
+    .style.width =
+      (
+        qIndex /
+        quizData.length *
+        100
+      ) + '%';
+
+
+  const feedback =
+    document.getElementById(
+      'quiz-feedback'
+    );
+
+
+  feedback.innerHTML = '';
+
+  feedback.classList.remove(
+    'yellow'
+  );
+
+
+  const optsWrap =
+    document.getElementById(
+      'quiz-options'
+    );
+
+
+  optsWrap.innerHTML = '';
+
+
+  data.options.forEach(
+    (opt, i) => {
+
+      const btn =
+        document.createElement(
+          'button'
+        );
+
+
+      btn.className =
+        'opt';
+
+
+      btn.textContent =
+        opt;
+
+
+      btn.onclick =
+        () =>
+          selectAnswer(
+            i,
+            btn
+          );
+
+
+      optsWrap.appendChild(
+        btn
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   RESPOSTA
+========================================================= */
+
+function selectAnswer(i, btnEl){
+
+  const data =
+    quizData[qIndex];
+
+
+  const feedback =
+    document.getElementById(
+      'quiz-feedback'
+    );
+
+
+  /* RESPOSTA ERRADA */
+
+  if(i !== data.correct){
+
+    btnEl.classList.add(
+      'wrong'
+    );
+
+
+    btnEl.style.pointerEvents =
+      'none';
+
+
+    if(
+      data.wrongFeedbacks &&
+      data.wrongFeedbacks[i]
+    ){
+
+      feedback.innerHTML =
+        data.wrongFeedbacks[i];
+
+
+      if(
+        qIndex === 0 ||
+        qIndex === 2
+      ){
+
+        feedback.classList.add(
+          'yellow'
+        );
+
+      }
+
+    }else{
+
+      feedback.textContent =
+        "Errou. Que surpresa. Tenta de novo, lerdona.";
+
+    }
+
+
+    return;
+
+  }
+
+
+  /* RESPOSTA CERTA */
+
+  document
+    .querySelectorAll('.opt')
+    .forEach(
+      b =>
+        b.style.pointerEvents =
+          'none'
+    );
+
+
+  btnEl.classList.add(
+    'correct'
+  );
+
+
+  feedback.classList.remove(
+    'yellow'
+  );
+
+
+  feedback.textContent =
+    data.feedback;
+
+
+  document
+    .getElementById('progress')
+    .style.width =
+      (
+        (qIndex + 1) /
+        quizData.length *
+        100
+      ) + '%';
+
+
+  setTimeout(
+    () => {
+
+      qIndex++;
+
+
+      if(
+        qIndex <
+        quizData.length
+      ){
+
+        renderQuestion();
+
+      }else{
+
+        quizCompleted =
+          true;
+
+
+        localStorage.setItem(
+          'quizCompleted',
+          'true'
+        );
+
+
+        localStorage.setItem(
+          'quizCompletedAt',
+          new Date().toISOString()
+        );
+
+
+        goTo('reveal');
+
+      }
+
+    },
+    1400
+  );
+
+}
+
+
+/* =========================================================
+   FINAL / INFORMAÇÕES DO QUIZ
+========================================================= */
+
+function finishQuiz(){
+
+  const ipDisplay =
+    document.getElementById(
+      'ipDisplay'
+    );
+
+
+  const savedIP =
+    localStorage.getItem(
+      'quizVisitorIP'
+    );
+
+
+  if(savedIP){
+
+    visitorIP =
+      savedIP;
+
+  }
+
+
+  if(
+    visitorIP !==
+    'Não identificado'
+  ){
+
+    ipDisplay.innerHTML =
+      'IP registrado nesta sessão: <strong>' +
+      visitorIP +
+      '</strong>';
+
+  }else{
+
+    ipDisplay.textContent =
+      'Quiz concluído. IP não pôde ser identificado.';
+
+  }
+
+}
+
+
+/* =========================================================
+   BOTÃO "DEIXA EU PENSAR" — FOGE
+========================================================= */
+
+const noBtn =
+  document.getElementById(
+    'btn-no'
+  );
+
+
+const btnRow =
+  noBtn.parentElement;
+
+
+let dodges = 0;
+
+
+let noPos = {
+  x:0,
+  y:0
+};
+
+
+noBtn.style.position =
+  'relative';
+
+
+noBtn.style.left =
+  '0px';
+
+
+noBtn.style.top =
+  '0px';
+
+
+function randomDodgeTarget(){
+
+  const rowRect =
+    btnRow.getBoundingClientRect();
+
+
+  const margin = 20;
+
+
+  const w =
+    noBtn.offsetWidth;
+
+
+  const h =
+    noBtn.offsetHeight;
+
+
+  const spanX =
+    Math.max(
+      window.innerWidth -
+      w -
+      margin * 2,
+      200
+    );
+
+
+  const spanY =
+    Math.max(
+      window.innerHeight * 0.5,
+      160
+    );
+
+
+  const targetX =
+    (
+      Math.random() - 0.5
+    ) * spanX;
+
+
+  const targetY =
+    (
+      Math.random() - 0.5
+    ) * spanY;
+
+
+  return {
+
+    x:targetX,
+
+    y:targetY
+
+  };
+
+}
+
+
+function dodge(){
+
+  noPos =
+    randomDodgeTarget();
+
+
+  noBtn.style.transform =
+    `translate(${noPos.x}px, ${noPos.y}px)`;
+
+
+  dodges++;
+
+
+  if(dodges === 3){
+
+    noBtn.textContent =
+      "para de tentar";
+
+  }else if(dodges === 8){
+
+    noBtn.textContent =
+      "sério, desiste";
+
+  }else if(dodges > 14){
+
+    noBtn.textContent =
+      "😤";
+
+  }
+
+}
+
+
+function distToBtn(
+  clientX,
+  clientY
+){
+
+  const rect =
+    noBtn.getBoundingClientRect();
+
+
+  const cx =
+    rect.left +
+    rect.width / 2;
+
+
+  const cy =
+    rect.top +
+    rect.height / 2;
+
+
+  return Math.hypot(
+    clientX - cx,
+    clientY - cy
+  );
+
+}
+
+
+document.addEventListener(
+  'mousemove',
+  (e) => {
+
+    if(
+      !document
+        .getElementById(
+          'scene-reveal'
+        )
+        .classList
+        .contains('active')
+    ){
+
+      return;
+
+    }
+
+
+    if(
+      distToBtn(
+        e.clientX,
+        e.clientY
+      ) < 110
+    ){
+
+      dodge();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+noBtn.addEventListener(
+  'touchstart',
+  function(e){
+
+    e.preventDefault();
+
+    dodge();
+
+  },
+  {passive:false}
+);
+
+
+noBtn.addEventListener(
+  'click',
+  function(e){
+
+    e.preventDefault();
+
+    e.stopPropagation();
+
+    dodge();
+
+  }
+);
+
+</script>
+
+</body>
+</html>
